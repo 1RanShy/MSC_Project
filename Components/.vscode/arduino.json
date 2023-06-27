@@ -1,0 +1,6 @@
+{
+    "board": "emoro:avr:emoro2560",
+    "sketch": "Components.ino",
+    "port": "COM9",
+    "output": "../ArduinoOutput"
+}

@@ -54,7 +54,5 @@
   "C_Cpp_Runner.useUndefinedSanitizer": false,
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
-  "C_Cpp.errorSquiggles": "disabled",
-  "arduino.path": "C:\\Program Files (x86)\\Arduino",
-  "arduino.commandPath": "arduino_debug.exe"
+  "C_Cpp.errorSquiggles": "disabled"
 }
