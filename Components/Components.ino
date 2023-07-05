@@ -15,7 +15,7 @@ void loop()
   //  vibratorTest();
   //humanSensorTest();
   sr04Test();
-  testInfrared();
+//  testInfrared();
 
 }
 void sr04Test()
