@@ -12,7 +12,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
               onPressed: () {
@@ -25,6 +26,10 @@ class _HomePageState extends State<HomePage> {
               child: const Text("基本路由跳转")),
           const SizedBox(
             height: 20,
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: 10,
           ),
           ElevatedButton(
               onPressed: () {
@@ -43,6 +48,11 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             height: 20,
           ),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/number");
+              },
+              child: const Text("Phonenumber")),
           ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, "/shop",
