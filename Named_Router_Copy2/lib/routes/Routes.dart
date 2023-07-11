@@ -16,12 +16,14 @@ import '../pages/Blue2.dart';
 import '../pages/Blue3.dart';
 import '../pages/RemotePage.dart';
 import '../pages/tabs/Home.dart';
+import '../pages/Ibeacon.dart';
 
 //配置路由,定义Map类型的routes,Key为String类型，value为Function类型
 final Map<String, Function> routes = {
   '/': (context) => Tabs(),
   '/form': (context) => FormPage(),
   '/home': (context) => HomePage(),
+  '/ibeacon': (context) => Ibeacon(),
   '/product': (context) => ProductPage(),
   '/productinfo': (context, {arguments}) =>
       ProductInfoPage(arguments: arguments),

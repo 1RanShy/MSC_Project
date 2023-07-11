@@ -98,16 +98,17 @@ class _HomePageState extends State<HomePage> {
       child: this.blueList.length > 0
           ? Column(
               children: this.blueList.map((device) {
-                //自动扫描设备名字为FISHTANK的设备然后连接上他
                 if (device.name == "FISHTANK") {
-                  Navigator.pushNamed(context, '/blue',
-                      arguments: {"device": device});
-                  print("__________________");
-                } else {}
-
-                return ListTile(
-                  title: Text("Please Open The device"),
-                );
+                  return ListTile(
+                    title: Text("${device.name}    ${device.id}"),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/blue',
+                          arguments: {"device": device});
+                    },
+                  );
+                } else {
+                  return Container(); // 返回一个空容器代替不需要的ListTile
+                }
               }).toList(),
             )
           : this.isBlueOn
@@ -120,3 +121,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+        //自动扫描设备名字为FISHTANK的设备然后连接上他
+        // if (device.name == "FISHTANK") {
+        //   Navigator.pushNamed(context, '/blue',
+        //       arguments: {"device": device});
+        //   print("__________________");
+        // } else {}

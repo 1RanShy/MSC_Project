@@ -106,7 +106,7 @@ class _BluePageState extends State<BluePage> {
       setState(() {
         show = String.fromCharCodes(value);
       });
-      
+
       //print(AsciiDecoder().convert(value));  //表示Ascii转换成字符串
     });
   }
@@ -177,13 +177,21 @@ class _BluePageState extends State<BluePage> {
                   await this.mCharacteristicWrite.write(convertedCommand);
                 },
                 child: Text("发送消息")),
-                SizedBox(height: 20,),
-                Text("以下是文本显示框"),
-                Text(show,
-                    style: TextStyle(color: Colors.blue),
-                     overflow: TextOverflow.ellipsis, //超出用...代替
-                    softWrap: false,
-                ),
+            SizedBox(
+              height: 20,
+            ),
+            Text("以下是文本显示框"),
+            Text(
+              show,
+              style: TextStyle(color: Colors.blue),
+              overflow: TextOverflow.ellipsis, //超出用...代替
+              softWrap: false,
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  Navigator.pushNamed(context, '/ibeacon');
+                },
+                child: Text("跳转到Ibecon界面")),
           ],
         ),
       ),
