@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /*
@@ -115,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   onChanged: (String text) => _phone = text,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: 'Input the phone number to launch'),
                 ),
               ),

@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import './routers/routers.dart';
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/link.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());

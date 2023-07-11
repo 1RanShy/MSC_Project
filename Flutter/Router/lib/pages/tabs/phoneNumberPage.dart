@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PhoneNumberPage extends StatefulWidget {
+  const PhoneNumberPage({super.key});
+
   @override
   _PhoneNumberPageState createState() => _PhoneNumberPageState();
 }
@@ -54,7 +55,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
         Uri(scheme: 'https', host: 'www.cylog.org', path: 'headers/');
     return Scaffold(
       appBar: AppBar(
-        title: Text('URL Launcher'),
+        title: const Text('URL Launcher'),
       ),
       body: ListView(
         children: <Widget>[
@@ -65,7 +66,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   onChanged: (String text) => _phone = text,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: 'Input the phone number to launch'),
                 ),
               ),

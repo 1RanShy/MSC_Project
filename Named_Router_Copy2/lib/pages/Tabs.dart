@@ -21,32 +21,11 @@ class _TabsState extends State<Tabs> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("RanShy Bluetooth Test "),
+        title: Text("Last 10 Meters"),
         automaticallyImplyLeading: false,
       ),
       body: this._pageList[this._currentIndex],
       //以下是显示底部导航栏的代码
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: this._currentIndex, //配置对应的索引值选中
-        onTap: (int index) {
-          setState(() {
-            //改变状态
-            this._currentIndex = index;
-          });
-        },
-        iconSize: 36.0, //icon的大小
-        fixedColor: Colors.blue, //选中的颜色
-        type: BottomNavigationBarType.fixed, //配置底部tabs可以有多个按钮
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "首页"),
-          BottomNavigationBarItem(icon: Icon(Icons.category), label: "分类"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "设置",
-            //backgroundColor: Colors.blue,
-          )
-        ],
-      ),
     );
   }
 }

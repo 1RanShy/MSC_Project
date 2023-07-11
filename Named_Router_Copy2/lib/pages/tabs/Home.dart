@@ -21,13 +21,13 @@ class _HomePageState extends State<HomePage> {
     //监听蓝牙是否开启
     flutterBlue.state.listen((state) {
       if (state == BluetoothState.on) {
-        print("蓝牙已经开启");
+        print("Already Turn Bluetooth");
         setState((() {
           this.isBlueOn = true;
         }));
         requestPermission();
       } else {
-        print("蓝牙未开启");
+        print("Bluetooth is off");
         setState((() {
           this.isBlueOn = false;
         }));
@@ -103,39 +103,20 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(context, '/blue',
                       arguments: {"device": device});
                   print("__________________");
-                }
+                } else {}
 
                 return ListTile(
-                  title: Text("${device.name}    ${device.id}"),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/blue',
-                        arguments: {"device": device});
-                  },
+                  title: Text("Please Open The device"),
                 );
               }).toList(),
             )
           : this.isBlueOn
               ? Container(
-                  child: this.hasPermission ? Text("没有扫描到设备") : Text("没有蓝牙权限"),
+                  child: this.hasPermission
+                      ? Text("Do not get any devices")
+                      : Text("No permission to bluetooth"),
                 )
-              : Text("没有打开蓝牙"),
+              : Text("Please turn on the Bluetooth"),
     );
   }
 }
-
-
-/*
-        ElevatedButton(
-          child: Text("跳转到搜索页面"),
-          onPressed: () {
-            //路由跳转
-            Navigator.pushNamed(context, '/search', arguments: {"id": 123});
-          },
-        ),
-        SizedBox(height: 20),
-        ElevatedButton(
-            child: Text("跳转到商品页面"),
-            onPressed: () {
-              Navigator.pushNamed(context, '/product');
-            }),
- */
