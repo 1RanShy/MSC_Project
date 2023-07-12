@@ -8,29 +8,32 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  new FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
-  String _tag = "Beacons Plugin";
+  final String _tag = "Beacons Plugin";
   String _beaconResult = 'Not Scanned Yet.';
   int _nrMessagesReceived = 0;
   var isRunning = false;
-  List<String> _results = [];
+  final List<String> _results = [];
   bool _isInForeground = true;
 
   final ScrollController _scrollController = ScrollController();
 
   final StreamController<String> beaconEventsController =
-  StreamController<String>.broadcast();
+      StreamController<String>.broadcast();
 
   @override
   void initState() {
@@ -40,9 +43,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('app_icon');
+        const AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS =
-    IOSInitializationSettings(onDidReceiveLocalNotification: null);
+        const IOSInitializationSettings(onDidReceiveLocalNotification: null);
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
@@ -69,7 +72,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       await BeaconsPlugin.setDisclosureDialogMessage(
           title: "Background Locations",
           message:
-          "[This app] collects location data to enable [feature], [feature], & [feature] even when the app is closed or not in use");
+              "[This app] collects location data to enable [feature], [feature], & [feature] even when the app is closed or not in use");
 
       //Only in case, you want the dialog to be shown again. By Default, dialog will never be shown if permissions are granted.
       //await BeaconsPlugin.clearDisclosureDialogShowFlag(false);
@@ -116,7 +119,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         backgroundScanPeriod: 2200, backgroundBetweenScanPeriod: 10);
 
     beaconEventsController.stream.listen(
-            (data) {
+        (data) {
           if (data.isNotEmpty && isRunning) {
             setState(() {
               _beaconResult = data;
@@ -125,10 +128,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             });
 
             if (!_isInForeground) {
-              _showNotification("Beacons DataReceived: " + data);
+              _showNotification("Beacons DataReceived: $data");
             }
 
-            print("Beacons DataReceived: " + data);
+            print("Beacons DataReceived: $data");
           }
         },
         onDone: () {},
@@ -156,14 +159,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             children: <Widget>[
               Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Total Results: $_nrMessagesReceived',
-                        style: Theme.of(context).textTheme.headline4?.copyWith(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Total Results: $_nrMessagesReceived',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontSize: 14,
                           color: const Color(0xFF22369C),
                           fontWeight: FontWeight.bold,
                         )),
-                  )),
+              )),
               Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: ElevatedButton(
@@ -179,7 +182,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                     });
                   },
                   child: Text(isRunning ? 'Stop Scanning' : 'Start Scanning',
-                      style: TextStyle(fontSize: 20)),
+                      style: const TextStyle(fontSize: 20)),
                 ),
               ),
               Visibility(
@@ -193,12 +196,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                         _results.clear();
                       });
                     },
-                    child:
-                    Text("Clear Results", style: TextStyle(fontSize: 20)),
+                    child: const Text("Clear Results",
+                        style: TextStyle(fontSize: 20)),
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               Expanded(child: _buildResultsList())
@@ -210,14 +213,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void _showNotification(String subtitle) {
-    var rng = new Random();
-    Future.delayed(Duration(seconds: 5)).then((result) async {
-      var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    var rng = Random();
+    Future.delayed(const Duration(seconds: 5)).then((result) async {
+      var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
           'your channel id', 'your channel name',
           importance: Importance.high,
           priority: Priority.high,
           ticker: 'ticker');
-      var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+      var iOSPlatformChannelSpecifics = const IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
@@ -229,31 +232,31 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   Widget _buildResultsList() {
     return Scrollbar(
-      isAlwaysShown: true,
+      thumbVisibility: true,
       controller: _scrollController,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         controller: _scrollController,
         itemCount: _results.length,
-        separatorBuilder: (BuildContext context, int index) => Divider(
+        separatorBuilder: (BuildContext context, int index) => const Divider(
           height: 1,
           color: Colors.black,
         ),
         itemBuilder: (context, index) {
           DateTime now = DateTime.now();
           String formattedDate =
-          DateFormat('yyyy-MM-dd – kk:mm:ss.SSS').format(now);
+              DateFormat('yyyy-MM-dd – kk:mm:ss.SSS').format(now);
           final item = ListTile(
               title: Text(
                 "Time: $formattedDate\n${_results[index]}",
                 textAlign: TextAlign.justify,
-                style: Theme.of(context).textTheme.headline4?.copyWith(
-                  fontSize: 14,
-                  color: const Color(0xFF1A1B26),
-                  fontWeight: FontWeight.normal,
-                ),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontSize: 14,
+                      color: const Color(0xFF1A1B26),
+                      fontWeight: FontWeight.normal,
+                    ),
               ),
               onTap: () {});
           return item;

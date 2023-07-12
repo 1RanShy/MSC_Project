@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -14,6 +12,13 @@ class BluePage extends StatefulWidget {
 }
 
 class _BluePageState extends State<BluePage> {
+  FlutterBlue flutterBlue = FlutterBlue.instance;
+  // bool isBlueOn = false;
+  // bool hasPermission = false;
+  List<BluetoothDevice> blueList = [];
+  List<ScanResult> test = [];
+  int rssi = 0;
+
   //获取设备
   late BluetoothDevice device;
   //获取设备连接的状态
@@ -62,6 +67,39 @@ class _BluePageState extends State<BluePage> {
     this.isDesponse = true;
     this.device.disconnect();
     super.dispose();
+  }
+
+  void scanDevice() {
+    // Start scanning
+    flutterBlue.startScan(timeout: Duration(seconds: 4));
+
+    // Listen to scan results
+    flutterBlue.scanResults.listen((results) {
+      // do something with scan results
+      for (ScanResult r in results) {
+        print('${r.device.name} found! rssi: ${r.rssi}');
+        if (r.device.name == "FISHTANK") {
+          print("----------------------------------------------");
+          print(r);
+        }
+        if (r.device.name == "RanShuai") {
+          print("--------------------------------------------");
+
+          setState(() {
+            rssi = r.rssi;
+          });
+        }
+
+        if (r.device.name.length > 2) {
+          if (this.blueList.indexOf(r.device) == -1) {
+            setState(() {
+              this.blueList.add(r.device);
+              this.test.add(r);
+            });
+          }
+        }
+      }
+    });
   }
 
   discoverServices() async {
@@ -168,6 +206,19 @@ class _BluePageState extends State<BluePage> {
                 });
               },
             ),
+            Text("Rssi"),
+            Text(
+              rssi.toString(),
+              style: TextStyle(color: Colors.blue),
+              overflow: TextOverflow.ellipsis, //超出用...代替
+              softWrap: false,
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  this.scanDevice();
+                },
+                child: Text("扫描设备")),
+
             ElevatedButton(
                 onPressed: () async {
                   final command = this._password2;
@@ -187,11 +238,6 @@ class _BluePageState extends State<BluePage> {
               overflow: TextOverflow.ellipsis, //超出用...代替
               softWrap: false,
             ),
-            ElevatedButton(
-                onPressed: () async {
-                  Navigator.pushNamed(context, '/ibeacon');
-                },
-                child: Text("跳转到Ibecon界面")),
           ],
         ),
       ),
