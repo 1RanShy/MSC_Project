@@ -71,7 +71,7 @@ class _BluePageState extends State<BluePage> {
 
   void scanDevice() {
     // Start scanning
-    flutterBlue.startScan(timeout: Duration(seconds: 4));
+    flutterBlue.startScan(timeout: Duration(seconds: 2));
 
     // Listen to scan results
     flutterBlue.scanResults.listen((results) {
@@ -82,9 +82,9 @@ class _BluePageState extends State<BluePage> {
           print("----------------------------------------------");
           print(r);
         }
+//获取蓝牙设备的名字和rssi  之后改为BluetoothDevice这个变量更加合适,可以存储更详细的信息
         if (r.device.name == "RanShuai") {
           print("--------------------------------------------");
-
           setState(() {
             rssi = r.rssi;
           });
@@ -156,56 +156,34 @@ class _BluePageState extends State<BluePage> {
       body: Container(
         child: Column(
           children: [
-            TextField(
-              maxLines: 3,
-              obscureText: false,
-              decoration: InputDecoration(hintText: "密码"),
-              onChanged: (value) {
-                setState(() {
-                  this._password0 = value;
-                });
-              },
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  final command = this._password0;
-                  final convertedCommand = AsciiEncoder().convert(command);
-
-                  // await this.mCharacteristics.write([97, 98]);
-                  await this.mCharacteristicWrite.write(convertedCommand);
-                },
-                child: Text("发送消息")),
-            //----------------------------
-            TextField(
-              maxLines: 3,
-              obscureText: false,
-              decoration: InputDecoration(hintText: "密码"),
-              onChanged: (value) {
-                setState(() {
-                  this._password1 = value;
-                });
-              },
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  final command = this._password1;
-                  final convertedCommand = AsciiEncoder().convert(command);
-
-                  // await this.mCharacteristics.write([97, 98]);
-                  await this.mCharacteristicWrite.write(convertedCommand);
-                },
-                child: Text("发送消息")),
             //------------------------
             TextField(
               maxLines: 3,
               obscureText: false,
-              decoration: InputDecoration(hintText: "密码"),
+              decoration: InputDecoration(hintText: "Password"),
               onChanged: (value) {
                 setState(() {
                   this._password2 = value;
                 });
               },
             ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width - 20,
+              height: 80,
+              child: ElevatedButton(
+                  onPressed: () async {
+                    final command = this._password2;
+                    final convertedCommand = AsciiEncoder().convert(command);
+
+                    // await this.mCharacteristics.write([97, 98]);
+                    await this.mCharacteristicWrite.write(convertedCommand);
+                  },
+                  child: Text("发送消息")),
+            ),
+
             Text("Rssi"),
             Text(
               rssi.toString(),
@@ -219,15 +197,6 @@ class _BluePageState extends State<BluePage> {
                 },
                 child: Text("扫描设备")),
 
-            ElevatedButton(
-                onPressed: () async {
-                  final command = this._password2;
-                  final convertedCommand = AsciiEncoder().convert(command);
-
-                  // await this.mCharacteristics.write([97, 98]);
-                  await this.mCharacteristicWrite.write(convertedCommand);
-                },
-                child: Text("发送消息")),
             SizedBox(
               height: 20,
             ),
