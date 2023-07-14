@@ -121,9 +121,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-        //自动扫描设备名字为Equipment的设备然后连接上他
-        // if (device.name == "Equipment") {
-        //   Navigator.pushNamed(context, '/blue',
-        //       arguments: {"device": device});
-        //   print("__________________");
-        // } else {}

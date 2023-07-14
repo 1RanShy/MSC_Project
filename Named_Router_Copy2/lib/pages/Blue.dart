@@ -1,7 +1,8 @@
 import 'dart:convert';
-
+// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BluePage extends StatefulWidget {
   final Map arguments;
@@ -12,9 +13,18 @@ class BluePage extends StatefulWidget {
 }
 
 class _BluePageState extends State<BluePage> {
+  // _saveData() async {
+  //   final SharedPreferences sp = await SharedPreferences.getInstance();
+  //   sp.setString("phonenumber", "17766093241");
+  // }
+
+  // _getData() async {
+  //   final SharedPreferences sp = await SharedPreferences.getInstance();
+  //   sp.getString("phonenumber");
+  // }
+
+  //-----------------------------------
   FlutterBlue flutterBlue = FlutterBlue.instance;
-  // bool isBlueOn = false;
-  // bool hasPermission = false;
   List<BluetoothDevice> blueList = [];
   List<ScanResult> test = [];
   int rssi = 0;
@@ -31,7 +41,8 @@ class _BluePageState extends State<BluePage> {
   late String _password0;
   late String _password1;
   late String _password2;
-  String show = "initialize";
+  String show = "Initialize";
+
   @override
   void initState() {
     super.initState();
@@ -200,16 +211,47 @@ class _BluePageState extends State<BluePage> {
             SizedBox(
               height: 20,
             ),
-            Text("以下是文本显示框"),
-            Text(
-              show,
-              style: TextStyle(color: Colors.blue),
-              overflow: TextOverflow.ellipsis, //超出用...代替
-              softWrap: false,
+            ElevatedButton(
+              onPressed: () => _launchPhoneCall('07754660823'),
+              child: Text('Emergency Contact'),
             ),
+            ElevatedButton(
+              onPressed: _launchGoogleMaps,
+              child: Text('打开Google Maps'),
+            ),
+            // Text("以下是文本显示框"),
+            // Text(
+            //   show,
+            //   style: TextStyle(color: Colors.blue),
+            //   overflow: TextOverflow.ellipsis, //超出用...代替
+            //   softWrap: false,
+            // ),
           ],
         ),
       ),
     );
+  }
+}
+
+// 拨打电话
+void _launchPhoneCall(String phoneNumber) async {
+  String url = 'tel:$phoneNumber';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw '无法拨打电话：$url';
+  }
+}
+
+// 打开Google Maps
+void _launchGoogleMaps() async {
+  final latitude = 37.7749; // 目标位置的纬度
+  final longitude = -122.4194; // 目标位置的经度
+
+  final url = 'geo:$latitude,$longitude';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw '无法打开Google Maps';
   }
 }

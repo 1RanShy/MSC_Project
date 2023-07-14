@@ -34,7 +34,9 @@ dependencies:
   intl: ^0.18.1
   flutter_local_notifications: ^9.6.0
   syncfusion_flutter_pdfviewer: ^19.1.69-beta
-
+  url_launcher: ^6.0.0
+  geolocator: ^9.0.2
+  # shared_preferences: ^2.2.0
   
 dev_dependencies:
   flutter_test:
