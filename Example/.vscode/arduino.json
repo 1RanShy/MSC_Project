@@ -1,5 +1,0 @@
-{
-    "board": "emoro:avr:emoro2560",
-    "sketch": "Example.ino",
-    "port": "COM9"
-}
