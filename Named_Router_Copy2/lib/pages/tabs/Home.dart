@@ -98,9 +98,9 @@ class _HomePageState extends State<HomePage> {
       child: this.blueList.length > 0
           ? Column(
               children: this.blueList.map((device) {
-                if (device.name == "FISHTANK") {
+                if (device.name == "Equipment") {
                   return ListTile(
-                    title: Text("${device.name}    ${device.id}"),
+                    title: Text("Double click to  connect Your ${device.name}"),
                     onTap: () {
                       Navigator.pushNamed(context, '/blue',
                           arguments: {"device": device});
@@ -121,8 +121,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-        //自动扫描设备名字为FISHTANK的设备然后连接上他
-        // if (device.name == "FISHTANK") {
+        //自动扫描设备名字为Equipment的设备然后连接上他
+        // if (device.name == "Equipment") {
         //   Navigator.pushNamed(context, '/blue',
         //       arguments: {"device": device});
         //   print("__________________");

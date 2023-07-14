@@ -45,7 +45,7 @@ class _BluePageState extends State<BluePage> {
       if (this.isDesponse == false) {
         if (state == BluetoothDeviceState.connected) {
           setState(() {
-            this.deviceState = "连接成功";
+            this.deviceState = "Success to Connect your equipment";
           });
           //发现服务
           this.discoverServices();
@@ -71,14 +71,14 @@ class _BluePageState extends State<BluePage> {
 
   void scanDevice() {
     // Start scanning
-    flutterBlue.startScan(timeout: Duration(seconds: 2));
+    flutterBlue.startScan(timeout: Duration(milliseconds: 1500));
 
     // Listen to scan results
     flutterBlue.scanResults.listen((results) {
       // do something with scan results
       for (ScanResult r in results) {
         print('${r.device.name} found! rssi: ${r.rssi}');
-        if (r.device.name == "FISHTANK") {
+        if (r.device.name == "Equipment") {
           print("----------------------------------------------");
           print(r);
         }
