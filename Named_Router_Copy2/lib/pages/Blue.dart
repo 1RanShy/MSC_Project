@@ -40,7 +40,7 @@ class _BluePageState extends State<BluePage> {
   late BluetoothCharacteristic mCharacteristicWrite;
   late String _password0;
   late String _password1;
-  late String _password2;
+  late String _phonenumber;
   String show = "Initialize";
 
   @override
@@ -174,7 +174,7 @@ class _BluePageState extends State<BluePage> {
               decoration: InputDecoration(hintText: "Password"),
               onChanged: (value) {
                 setState(() {
-                  this._password2 = value;
+                  this._phonenumber = value;
                 });
               },
             ),
@@ -186,7 +186,7 @@ class _BluePageState extends State<BluePage> {
               height: 80,
               child: ElevatedButton(
                   onPressed: () async {
-                    final command = this._password2;
+                    final command = this._phonenumber;
                     final convertedCommand = AsciiEncoder().convert(command);
 
                     // await this.mCharacteristics.write([97, 98]);
@@ -210,6 +210,22 @@ class _BluePageState extends State<BluePage> {
 
             SizedBox(
               height: 20,
+            ),
+            TextField(
+              maxLines: 3,
+              obscureText: false,
+              decoration: InputDecoration(
+                  hintText: "Enter the number you want to call"),
+              keyboardType: TextInputType.number, // 设置键盘类型为数字键盘
+              onChanged: (value) {
+                setState(() {
+                  this._phonenumber = value;
+                });
+              },
+            ),
+            ElevatedButton(
+              onPressed: () => _launchPhoneCall(_phonenumber),
+              child: Text('Call The Number'),
             ),
             ElevatedButton(
               onPressed: () => _launchPhoneCall('07754660823'),
