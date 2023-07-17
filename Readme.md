@@ -24,6 +24,5 @@ ESP8266 + vibration + ultrasonic sensor + long cane = Ultrasonic detection cane.
 
 ![image-20230717100305612](assets/image-20230717100305612.png)
 
-
-
 ![image-20230717100340476](assets/image-20230717100340476.png)
+
