@@ -696,5 +696,4 @@ String show //是这里面的蓝牙接收字符串
 */
 ```
 
-
-
+[How to get Bluetooth Permission in Android 12+](https://stackoverflow.com/questions/67722950/android-12-new-bluetooth-permissions)
