@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class BluePage extends StatefulWidget {
   final Map arguments;
@@ -14,6 +16,75 @@ class BluePage extends StatefulWidget {
 }
 
 class _BluePageState extends State<BluePage> {
+  //_____________Speech To Text_________________
+
+  SpeechToText _speechToText = SpeechToText();
+  SpeechToText _speechToText2 = SpeechToText();
+  bool _speechEnabled = false;
+  bool _speechEnabled2 = false;
+  String _lastWords = '';
+  String _lastWords2 = '';
+
+  /// This has to happen only once per app
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    await _speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  /// Manually stop the active speech recognition session
+  /// Note that there are also timeouts that each platform enforces
+  /// and the SpeechToText plugin supports setting timeouts on the
+  /// listen method.
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  /// This is the callback that the SpeechToText plugin calls when
+  /// the platform returns recognized words.
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      _lastWords = result.recognizedWords;
+    });
+  }
+
+//----------------------------------
+  /// This has to happen only once per app
+  void _initSpeech2() async {
+    _speechEnabled = await _speechToText2.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening2() async {
+    await _speechToText2.listen(onResult: _onSpeechResult2);
+    setState(() {});
+  }
+
+  /// Manually stop the active speech recognition session
+  /// Note that there are also timeouts that each platform enforces
+  /// and the SpeechToText plugin supports setting timeouts on the
+  /// listen method.
+  void _stopListening2() async {
+    await _speechToText2.stop();
+    setState(() {});
+  }
+
+  /// This is the callback that the SpeechToText plugin calls when
+  /// the platform returns recognized words.
+  void _onSpeechResult2(SpeechRecognitionResult result) {
+    setState(() {
+      _lastWords2 = result.recognizedWords;
+    });
+  }
+
+  //_______________Phone Data Srore______________________________________
   String _phonenumber = "1021";
   _saveData() async {
     // Obtain shared preferences.
@@ -52,6 +123,8 @@ class _BluePageState extends State<BluePage> {
   @override
   void initState() {
     super.initState();
+    _initSpeech();
+    _initSpeech2();
     _getData();
     //获取设备
     this.device = widget.arguments["device"];
@@ -172,119 +245,157 @@ class _BluePageState extends State<BluePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("${this.deviceState}"),
-        backgroundColor: Colors.brown,
-      ),
-      body: Container(
-        color: Colors.grey, // 设置深绿色背景
-        child: Column(
+        appBar: AppBar(
+          title: Text("${this.deviceState}"),
+          backgroundColor: Colors.brown,
+        ),
+        body: ListView(
           children: [
-            //------------------------
-            TextField(
-              maxLines: 3,
-              obscureText: false,
-              decoration: InputDecoration(hintText: "_code0"),
-              onChanged: (value) {
-                setState(() {
-                  this._code0 = value;
-                });
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
             Container(
-              width: MediaQuery.of(context).size.width - 20,
-              height: 80,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    final command = this._code0;
-                    final convertedCommand = AsciiEncoder().convert(command);
+              color: Colors.grey, // 设置深绿色背景
+              child: Column(
+                children: [
+                  //------------------------
+                  TextField(
+                    maxLines: 3,
+                    obscureText: false,
+                    decoration: InputDecoration(hintText: "_code0"),
+                    onChanged: (value) {
+                      setState(() {
+                        this._code0 = value;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 80,
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          final command = this._code0;
+                          final convertedCommand =
+                              AsciiEncoder().convert(command);
 
-                    // await this.mCharacteristics.write([97, 98]);
-                    await this.mCharacteristicWrite.write(convertedCommand);
-                  },
-                  child: Text("发送消息")),
-            ),
+                          // await this.mCharacteristics.write([97, 98]);
+                          await this
+                              .mCharacteristicWrite
+                              .write(convertedCommand);
+                        },
+                        child: Text("发送消息")),
+                  ),
 
-            Text("Rssi"),
-            Text(
-              rssi.toString(),
-              style: TextStyle(color: Colors.blue),
-              overflow: TextOverflow.ellipsis, //超出用...代替
-              softWrap: false,
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  this.scanDevice();
-                },
-                child: Text("扫描设备")),
+                  Text("Rssi"),
+                  Text(
+                    rssi.toString(),
+                    style: TextStyle(color: Colors.blue),
+                    overflow: TextOverflow.ellipsis, //超出用...代替
+                    softWrap: false,
+                  ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        this.scanDevice();
+                      },
+                      child: Text("扫描设备")),
 
-            SizedBox(
-              height: 20,
-            ),
-            Tooltip(
-              message: "Enter the number you want to call",
-              child: TextField(
-                maxLines: 3,
-                obscureText: false,
-                decoration: InputDecoration(hintText: "${_phonenumber}"),
-                keyboardType: TextInputType.number, // 设置键盘类型为数字键盘
-                onChanged: (value) {
-                  setState(() {
-                    this._phonenumber = value;
-                  });
-                },
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Tooltip(
+                    message: "Enter the number you want to call",
+                    child: TextField(
+                      maxLines: 3,
+                      obscureText: false,
+                      decoration: InputDecoration(hintText: "${_phonenumber}"),
+                      keyboardType: TextInputType.number, // 设置键盘类型为数字键盘
+                      onChanged: (value) {
+                        setState(() {
+                          this._phonenumber = value;
+                        });
+                      },
+                    ),
+                  ),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 6, right: 3),
+                          child: ElevatedButton(
+                            onPressed: () => _launchPhoneCall(_phonenumber),
+                            child: Text('Call The Number'),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 3, right: 6),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _saveData();
+                            },
+                            child: Text('Save the Number'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // ElevatedButton(
+                  //   onPressed: () => _launchPhoneCall('07754660823'),
+                  //   child: Text('Emergency Contact'),
+                  // ),
+                  // ElevatedButton(
+                  //   onPressed: _launchGoogleMaps,
+                  //   child: Text('打开Google Maps'),
+                  // ),
+                  // Text("以下是文本显示框"),
+                  Text(
+                    show,
+                    style: TextStyle(color: Colors.blue),
+                    overflow: TextOverflow.ellipsis, //超出用...代替
+                    softWrap: false,
+                  ),
+                ],
               ),
             ),
-
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 6, right: 3),
-                    child: ElevatedButton(
-                      onPressed: () => _launchPhoneCall(_phonenumber),
-                      child: Text('Call The Number'),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 3, right: 6),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _saveData();
-                      },
-                      child: Text('Save the Number'),
-                    ),
-                  ),
-                ),
-              ],
+            //_________________________________
+            Container(
+              color: Colors.grey, // 设置深绿色背景
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Recognized words:',
+                style: TextStyle(fontSize: 20.0),
+              ),
             ),
-
-            ElevatedButton(
-              onPressed: () => _launchPhoneCall('07754660823'),
-              child: Text('Emergency Contact'),
+            Expanded(
+              child: Container(
+                color: Colors.grey, // 设置深绿色背景
+                padding: EdgeInsets.all(16),
+                child: Text(
+                    // If listening is active show the recognized words
+                    '$_lastWords'
+                    // If listening isn't active but could be tell the user
+                    // how to start it, otherwise indicate that speech
+                    // recognition is not yet ready or not supported on
+                    // the target device
+                    ),
+              ),
             ),
             ElevatedButton(
-              onPressed: _launchGoogleMaps,
-              child: Text('打开Google Maps'),
-            ),
-            // Text("以下是文本显示框"),
-            Text(
-              show,
-              style: TextStyle(color: Colors.blue),
-              overflow: TextOverflow.ellipsis, //超出用...代替
-              softWrap: false,
+              onPressed:
+                  // If not yet listening for speech start, otherwise stop
+                  _speechToText.isNotListening
+                      ? _startListening
+                      : _stopListening,
+              child: Icon(
+                  _speechToText.isNotListening ? Icons.mic_off : Icons.mic),
             ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }
 
