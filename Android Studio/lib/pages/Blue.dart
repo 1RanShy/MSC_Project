@@ -44,8 +44,8 @@ class _BluePageState extends State<BluePage> {
   //获取读写的特征值
   late BluetoothCharacteristic mCharacteristicRead;
   late BluetoothCharacteristic mCharacteristicWrite;
-  late String _password0;
-  late String _password1;
+  late String _code0;
+  late String _code1;
 
   String show = "Initialize";
 
@@ -172,18 +172,22 @@ class _BluePageState extends State<BluePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("${this.deviceState}")),
+      appBar: AppBar(
+        title: Text("${this.deviceState}"),
+        backgroundColor: Colors.brown,
+      ),
       body: Container(
+        color: Colors.grey, // 设置深绿色背景
         child: Column(
           children: [
             //------------------------
             TextField(
               maxLines: 3,
               obscureText: false,
-              decoration: InputDecoration(hintText: "Password"),
+              decoration: InputDecoration(hintText: "_code0"),
               onChanged: (value) {
                 setState(() {
-                  this._phonenumber = value;
+                  this._code0 = value;
                 });
               },
             ),
@@ -195,7 +199,7 @@ class _BluePageState extends State<BluePage> {
               height: 80,
               child: ElevatedButton(
                   onPressed: () async {
-                    final command = this._phonenumber;
+                    final command = this._code0;
                     final convertedCommand = AsciiEncoder().convert(command);
 
                     // await this.mCharacteristics.write([97, 98]);
@@ -220,19 +224,21 @@ class _BluePageState extends State<BluePage> {
             SizedBox(
               height: 20,
             ),
-            TextField(
-              maxLines: 3,
-              obscureText: false,
-              decoration: InputDecoration(
-                  hintText:
-                      "Enter the number you want to call or call ${_phonenumber}"),
-              keyboardType: TextInputType.number, // 设置键盘类型为数字键盘
-              onChanged: (value) {
-                setState(() {
-                  this._phonenumber = value;
-                });
-              },
+            Tooltip(
+              message: "Enter the number you want to call",
+              child: TextField(
+                maxLines: 3,
+                obscureText: false,
+                decoration: InputDecoration(hintText: "${_phonenumber}"),
+                keyboardType: TextInputType.number, // 设置键盘类型为数字键盘
+                onChanged: (value) {
+                  setState(() {
+                    this._phonenumber = value;
+                  });
+                },
+              ),
             ),
+
             Row(
               children: [
                 Expanded(
@@ -269,12 +275,12 @@ class _BluePageState extends State<BluePage> {
               child: Text('打开Google Maps'),
             ),
             // Text("以下是文本显示框"),
-            // Text(
-            //   show,
-            //   style: TextStyle(color: Colors.blue),
-            //   overflow: TextOverflow.ellipsis, //超出用...代替
-            //   softWrap: false,
-            // ),
+            Text(
+              show,
+              style: TextStyle(color: Colors.blue),
+              overflow: TextOverflow.ellipsis, //超出用...代替
+              softWrap: false,
+            ),
           ],
         ),
       ),

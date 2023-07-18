@@ -99,13 +99,16 @@ class _HomePageState extends State<HomePage> {
           ? Column(
               children: this.blueList.map((device) {
                 if (device.name == "Equipment") {
-                  return ListTile(
-                    title: Text("Double click to  connect Your ${device.name}"),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/blue',
-                          arguments: {"device": device});
-                    },
-                  );
+                  return Tooltip(
+                      message: "Tap to connect your device",
+                      child: ListTile(
+                        title: Text(
+                            "Double click to  connect Your ${device.name}"),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/blue',
+                              arguments: {"device": device});
+                        },
+                      ));
                 } else {
                   return Container(); // 返回一个空容器代替不需要的ListTile
                 }

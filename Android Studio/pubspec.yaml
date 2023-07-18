@@ -43,6 +43,7 @@ dependencies:
   url_launcher: ^6.0.0
   geolocator: ^9.0.2
   shared_preferences: ^2.2.0
+  flutter_tts: ^3.7.0
 
 dev_dependencies:
   flutter_test:
