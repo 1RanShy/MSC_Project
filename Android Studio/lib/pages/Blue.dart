@@ -85,18 +85,18 @@ class _BluePageState extends State<BluePage> {
   }
 
   //_______________Phone Data Srore______________________________________
-  String _phonenumber = "1021";
+  String _phonenumber2 = "1021";
   _saveData() async {
     // Obtain shared preferences.
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('_phonenumber', _phonenumber);
+    await prefs.setString('_phonenumber2', _phonenumber2);
   }
 
   _getData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _phonenumber = prefs.getString('_phonenumber')!;
+      _phonenumber2 = prefs.getString('_phonenumber2')!;
     });
   }
 
@@ -297,119 +297,22 @@ class _BluePageState extends State<BluePage> {
             SizedBox(
               height: 20,
             ),
-            Tooltip(
-              message: "Enter the number you want to call",
-              child: TextField(
-                maxLines: 3,
-                obscureText: false,
-                decoration: InputDecoration(hintText: "${_phonenumber}"),
-                keyboardType: TextInputType.number, // 设置键盘类型为数字键盘
-                onChanged: (value) {
-                  setState(() {
-                    this._phonenumber = value;
-                  });
-                },
-              ),
-            ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 6, right: 3),
-                    child: ElevatedButton(
-                      onPressed: () => _launchPhoneCall(_phonenumber),
-                      child: Text('Call The Number'),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 3, right: 6),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _saveData();
-                      },
-                      child: Text('Save the Number'),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            // ElevatedButton(
-            //   onPressed: () => _launchPhoneCall('07754660823'),
-            //   child: Text('Emergency Contact'),
-            // ),
-            // ElevatedButton(
-            //   onPressed: _launchGoogleMaps,
-            //   child: Text('打开Google Maps'),
-            // ),
-            // Text("以下是文本显示框"),
+            Text("以下是文本显示/蓝牙数据显示"),
             Text(
               show,
               style: TextStyle(color: Colors.blue),
               overflow: TextOverflow.ellipsis, //超出用...代替
               softWrap: false,
             ),
-            Container(
-              color: Colors.grey, // 设置深绿色背景
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'Recognized words:',
-                style: TextStyle(fontSize: 20.0),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                color: Colors.grey, // 设置深绿色背景
-                padding: EdgeInsets.all(16),
-                child: Text(
-                    // If listening is active show the recognized words
-                    '$_lastWords'
-                    // If listening isn't active but could be tell the user
-                    // how to start it, otherwise indicate that speech
-                    // recognition is not yet ready or not supported on
-                    // the target device
-                    ),
-              ),
-            ),
+
             ElevatedButton(
               onPressed: () {
-                if (_speechToText.isNotListening) {
-                  _startListening();
-                } else {
-                  _stopListening();
-                }
-                print(
-                    "----------------------------------------------------------");
-                // if (X.contains("call")) {
-                //   print("1234-------------");
-                // }
+                Navigator.pushNamed(context, '/product');
               },
               // If not yet listening for speech start, otherwise stop
 
-              child: Icon(
-                  _speechToText.isNotListening ? Icons.mic_off : Icons.mic),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                print(_lastWords);
-                RegExp regex = RegExp(r'\d+');
-                Match? match = regex.firstMatch(_lastWords);
-
-                String x = match?.group(0) ?? '';
-                if (_lastWords.contains("call")) {
-                  _launchPhoneCall(x);
-                }
-                print(x);
-              },
-              // If not yet listening for speech start, otherwise stop
-
-              child: Text("Make Sure"),
+              child: Text("Jump to Next Page"),
             ),
           ],
         ),
