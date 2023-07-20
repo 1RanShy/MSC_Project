@@ -245,124 +245,116 @@ class _BluePageState extends State<BluePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("${this.deviceState}"),
-          backgroundColor: Colors.brown,
-        ),
-        body: ListView(
+      appBar: AppBar(
+        title: Text("${this.deviceState}"),
+        backgroundColor: Colors.brown,
+      ),
+      body: Container(
+        color: Colors.grey, // 设置深绿色背景
+        child: Column(
           children: [
+            //------------------------
+            TextField(
+              maxLines: 3,
+              obscureText: false,
+              decoration: InputDecoration(hintText: "_code0"),
+              onChanged: (value) {
+                setState(() {
+                  this._code0 = value;
+                });
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
             Container(
-              color: Colors.grey, // 设置深绿色背景
-              child: Column(
-                children: [
-                  //------------------------
-                  TextField(
-                    maxLines: 3,
-                    obscureText: false,
-                    decoration: InputDecoration(hintText: "_code0"),
-                    onChanged: (value) {
-                      setState(() {
-                        this._code0 = value;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width - 20,
-                    height: 80,
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          final command = this._code0;
-                          final convertedCommand =
-                              AsciiEncoder().convert(command);
+              width: MediaQuery.of(context).size.width - 20,
+              height: 80,
+              child: ElevatedButton(
+                  onPressed: () async {
+                    final command = this._code0;
+                    final convertedCommand = AsciiEncoder().convert(command);
 
-                          // await this.mCharacteristics.write([97, 98]);
-                          await this
-                              .mCharacteristicWrite
-                              .write(convertedCommand);
-                        },
-                        child: Text("发送消息")),
-                  ),
+                    // await this.mCharacteristics.write([97, 98]);
+                    await this.mCharacteristicWrite.write(convertedCommand);
+                  },
+                  child: Text("发送消息")),
+            ),
 
-                  Text("Rssi"),
-                  Text(
-                    rssi.toString(),
-                    style: TextStyle(color: Colors.blue),
-                    overflow: TextOverflow.ellipsis, //超出用...代替
-                    softWrap: false,
-                  ),
-                  ElevatedButton(
-                      onPressed: () async {
-                        this.scanDevice();
-                      },
-                      child: Text("扫描设备")),
+            Text("Rssi"),
+            Text(
+              rssi.toString(),
+              style: TextStyle(color: Colors.blue),
+              overflow: TextOverflow.ellipsis, //超出用...代替
+              softWrap: false,
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  this.scanDevice();
+                },
+                child: Text("扫描设备")),
 
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Tooltip(
-                    message: "Enter the number you want to call",
-                    child: TextField(
-                      maxLines: 3,
-                      obscureText: false,
-                      decoration: InputDecoration(hintText: "${_phonenumber}"),
-                      keyboardType: TextInputType.number, // 设置键盘类型为数字键盘
-                      onChanged: (value) {
-                        setState(() {
-                          this._phonenumber = value;
-                        });
-                      },
-                    ),
-                  ),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 6, right: 3),
-                          child: ElevatedButton(
-                            onPressed: () => _launchPhoneCall(_phonenumber),
-                            child: Text('Call The Number'),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 3, right: 6),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _saveData();
-                            },
-                            child: Text('Save the Number'),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // ElevatedButton(
-                  //   onPressed: () => _launchPhoneCall('07754660823'),
-                  //   child: Text('Emergency Contact'),
-                  // ),
-                  // ElevatedButton(
-                  //   onPressed: _launchGoogleMaps,
-                  //   child: Text('打开Google Maps'),
-                  // ),
-                  // Text("以下是文本显示框"),
-                  Text(
-                    show,
-                    style: TextStyle(color: Colors.blue),
-                    overflow: TextOverflow.ellipsis, //超出用...代替
-                    softWrap: false,
-                  ),
-                ],
+            SizedBox(
+              height: 20,
+            ),
+            Tooltip(
+              message: "Enter the number you want to call",
+              child: TextField(
+                maxLines: 3,
+                obscureText: false,
+                decoration: InputDecoration(hintText: "${_phonenumber}"),
+                keyboardType: TextInputType.number, // 设置键盘类型为数字键盘
+                onChanged: (value) {
+                  setState(() {
+                    this._phonenumber = value;
+                  });
+                },
               ),
             ),
-            //_________________________________
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 6, right: 3),
+                    child: ElevatedButton(
+                      onPressed: () => _launchPhoneCall(_phonenumber),
+                      child: Text('Call The Number'),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 3, right: 6),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _saveData();
+                      },
+                      child: Text('Save the Number'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            // ElevatedButton(
+            //   onPressed: () => _launchPhoneCall('07754660823'),
+            //   child: Text('Emergency Contact'),
+            // ),
+            // ElevatedButton(
+            //   onPressed: _launchGoogleMaps,
+            //   child: Text('打开Google Maps'),
+            // ),
+            // Text("以下是文本显示框"),
+            Text(
+              show,
+              style: TextStyle(color: Colors.blue),
+              overflow: TextOverflow.ellipsis, //超出用...代替
+              softWrap: false,
+            ),
             Container(
               color: Colors.grey, // 设置深绿色背景
               padding: EdgeInsets.all(16),
@@ -386,16 +378,44 @@ class _BluePageState extends State<BluePage> {
               ),
             ),
             ElevatedButton(
-              onPressed:
-                  // If not yet listening for speech start, otherwise stop
-                  _speechToText.isNotListening
-                      ? _startListening
-                      : _stopListening,
+              onPressed: () {
+                if (_speechToText.isNotListening) {
+                  _startListening();
+                } else {
+                  _stopListening();
+                }
+                print(
+                    "----------------------------------------------------------");
+                // if (X.contains("call")) {
+                //   print("1234-------------");
+                // }
+              },
+              // If not yet listening for speech start, otherwise stop
+
               child: Icon(
                   _speechToText.isNotListening ? Icons.mic_off : Icons.mic),
             ),
+            ElevatedButton(
+              onPressed: () {
+                print(_lastWords);
+                RegExp regex = RegExp(r'\d+');
+                Match? match = regex.firstMatch(_lastWords);
+
+                String x = match?.group(0) ?? '';
+                if (_lastWords.contains("call")) {
+                  _launchPhoneCall(x);
+                }
+                print(x);
+              },
+              // If not yet listening for speech start, otherwise stop
+
+              child: Text("Make Sure"),
+            ),
           ],
-        ));
+        ),
+      ),
+      //_________________________________
+    );
   }
 }
 
