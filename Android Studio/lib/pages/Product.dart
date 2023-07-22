@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:vibration/vibration.dart';
 
 class ProductPage extends StatefulWidget {
   //Flutter2.2.0之后需要注意把Key改为可空类型  {Key? key} 表示Key为可空类型
@@ -15,6 +17,22 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  //__________Timer_______________
+  int cc = 0;
+  late Timer _timer;
+  void startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      // 在这里执行你的函数
+      cc++;
+      print(cc);
+    });
+  }
+
+  void stopTimer(Timer timer) {
+    if (timer != null && timer.isActive) {
+      timer.cancel();
+    }
+  }
 //_____________Speech To Text_________________
 
   SpeechToText _speechToText = SpeechToText();
@@ -105,6 +123,7 @@ class _ProductPageState extends State<ProductPage> {
     super.initState();
     _initSpeech();
     _initSpeech2();
+    startTimer();
     _getData();
   }
 
@@ -112,6 +131,7 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void dispose() {
     _saveData();
+    stopTimer(_timer);
     super.dispose();
   }
 
@@ -120,7 +140,10 @@ class _ProductPageState extends State<ProductPage> {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('商品页面'),
+        title: Tooltip(
+          message: "Call number and open google map in this Page",
+          child: Text('Contact Functions'),
+        ),
         backgroundColor: Colors.brown,
       ),
       body: Container(
@@ -178,7 +201,7 @@ class _ProductPageState extends State<ProductPage> {
             ),
             ElevatedButton(
               onPressed: _launchGoogleMaps,
-              child: Text('打开Google Maps'),
+              child: Text('Google Maps'),
             ),
             // Text("以下是文本显示框"),
             Text(
@@ -242,6 +265,12 @@ class _ProductPageState extends State<ProductPage> {
 
               child: Text("Make Sure"),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  // HapticFeedback.vibrate();
+                  Vibration.vibrate(duration: 500);
+                },
+                child: Text("Vibration"))
           ],
         ),
       ),

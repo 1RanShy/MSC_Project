@@ -33,7 +33,7 @@ class _TabsState extends State<Tabs> {
 
   void initState() {
     // TODO: implement initState
-    textToSpeech("Tap Page to Connect your Equipment");
+    // textToSpeech("Tap Page to Connect your Equipment");
     super.initState();
   }
 
@@ -41,7 +41,10 @@ class _TabsState extends State<Tabs> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Center(child: Text("Last 10 Meters")),
+          title: Tooltip(
+            message: "This is an app to help your find the entrance",
+            child: Center(child: Text("Last 10 Meters")),
+          ),
           automaticallyImplyLeading: false,
           backgroundColor: Colors.brown, // 设置背景颜色为棕色
         ),

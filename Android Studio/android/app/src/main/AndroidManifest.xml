@@ -17,7 +17,6 @@
 <!-- Get Bluetooth Device -->
         <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
         <uses-permission android:name="android.permission.CALL_PHONE" />
-
     <application
         android:label="untitled1"
         android:name="${applicationName}"

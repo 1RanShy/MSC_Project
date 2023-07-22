@@ -46,6 +46,7 @@ dependencies:
   flutter_tts: ^3.7.0
   flutter_speech: ^2.0.0
   speech_to_text: ^6.3.0
+  vibration: ^1.7.5
 
 dev_dependencies:
   flutter_test:

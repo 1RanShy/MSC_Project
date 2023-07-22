@@ -6,7 +6,9 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
+// import 'package:flutter/services.dart'
 class BluePage extends StatefulWidget {
   final Map arguments;
   BluePage({Key? key, required this.arguments}) : super(key: key);
@@ -16,6 +18,30 @@ class BluePage extends StatefulWidget {
 }
 
 class _BluePageState extends State<BluePage> {
+  //_____________Timer_________________
+  //__________Timer_______________
+  int cc = 0;
+  late Timer _timer;
+  void startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {
+      // 在这里执行你的函数
+      try {
+        scanDevice();
+        throw Exception('蓝牙扫描注册失败');
+      } catch (e) {
+        // 捕获异常，并执行相应的函数
+        scanDevice();
+      }
+
+      print(cc);
+    });
+  }
+
+  void stopTimer(Timer timer) {
+    if (timer != null && timer.isActive) {
+      timer.cancel();
+    }
+  }
   //_____________Speech To Text_________________
 
   SpeechToText _speechToText = SpeechToText();
@@ -105,6 +131,10 @@ class _BluePageState extends State<BluePage> {
   List<BluetoothDevice> blueList = [];
   List<ScanResult> test = [];
   int rssi = 0;
+  int rssiLeft = 0;
+  int rssiRight = 0;
+  int rssiFront = 0;
+  int time = 1;
 
   //获取设备
   late BluetoothDevice device;
@@ -119,12 +149,26 @@ class _BluePageState extends State<BluePage> {
   late String _code1;
 
   String show = "Initialize";
+//_______________________________
+//__________________________________________________________
+  TextEditingController textEditingController = TextEditingController();
+  FlutterTts flutterTts = FlutterTts();
+  void textToSpeech(String text) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setVolume(1.0);
+    await flutterTts.setSpeechRate(0.3);
+    await flutterTts.setPitch(1);
+    await flutterTts.speak(text);
+  }
 
+//___
   @override
   void initState() {
     super.initState();
+    time = 1;
     _initSpeech();
     _initSpeech2();
+    startTimer();
     _getData();
     //获取设备
     this.device = widget.arguments["device"];
@@ -157,6 +201,7 @@ class _BluePageState extends State<BluePage> {
   void dispose() {
     this.isDesponse = true;
     this.device.disconnect();
+    stopTimer(_timer);
     _saveData();
 
     super.dispose();
@@ -180,6 +225,51 @@ class _BluePageState extends State<BluePage> {
           print("--------------------------------------------");
           setState(() {
             rssi = r.rssi;
+          });
+        }
+
+        //获取蓝牙设备的名字和rssi  之后改为BluetoothDevice这个变量更加合适,可以存储更详细的信息
+        if (r.device.name == "Left") {
+          print("--------------------------------------------");
+          setState(() {
+            rssiLeft = r.rssi;
+            if (time > 0) {
+              print(
+                  "You are now near the entrance, please follow the instructions to enter.");
+              textToSpeech(
+                  "You are now near the entrance, please follow the instructions to enter.");
+              time--;
+            }
+          });
+        }
+
+        //获取蓝牙设备的名字和rssi  之后改为BluetoothDevice这个变量更加合适,可以存储更详细的信息
+        if (r.device.name == "Right") {
+          print("--------------------------------------------");
+          setState(() {
+            rssiRight = r.rssi;
+            if (time > 0) {
+              print(
+                  "You are now near the entrance, please follow the instructions to enter.");
+              textToSpeech(
+                  "You are now near the entrance, please follow the instructions to enter.");
+              time--;
+            }
+          });
+        }
+
+        //获取蓝牙设备的名字和rssi  之后改为BluetoothDevice这个变量更加合适,可以存储更详细的信息
+        if (r.device.name == "Front") {
+          print("--------------------------------------------");
+          setState(() {
+            rssiFront = r.rssi;
+            if (time > 0) {
+              print(
+                  "You are now near the entrance, please follow the instructions to enter.");
+              textToSpeech(
+                  "You are now near the entrance, please follow the instructions to enter.");
+              time--;
+            }
           });
         }
 
@@ -246,13 +336,17 @@ class _BluePageState extends State<BluePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${this.deviceState}"),
+        title: Tooltip(
+          message: "Success to Connect your Device",
+          child: Text("Successful"),
+        ),
         backgroundColor: Colors.brown,
       ),
       body: Container(
         color: Colors.grey, // 设置深绿色背景
         child: Column(
           children: [
+            Text(time.toString()),
             //------------------------
             TextField(
               maxLines: 3,
@@ -280,19 +374,60 @@ class _BluePageState extends State<BluePage> {
                   },
                   child: Text("发送消息")),
             ),
-
-            Text("Rssi"),
-            Text(
-              rssi.toString(),
-              style: TextStyle(color: Colors.blue),
-              overflow: TextOverflow.ellipsis, //超出用...代替
-              softWrap: false,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("RanShuai : "),
+                Text(
+                  rssi.toString(),
+                  style: TextStyle(color: Colors.blue),
+                  overflow: TextOverflow.ellipsis, //超出用...代替
+                  softWrap: false,
+                ),
+              ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Left : "),
+                Text(
+                  rssiLeft.toString(),
+                  style: TextStyle(color: Colors.blue),
+                  overflow: TextOverflow.ellipsis, //超出用...代替
+                  softWrap: false,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Right : "),
+                Text(
+                  rssiRight.toString(),
+                  style: TextStyle(color: Colors.blue),
+                  overflow: TextOverflow.ellipsis, //超出用...代替
+                  softWrap: false,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Front : "),
+                Text(
+                  rssiFront.toString(),
+                  style: TextStyle(color: Colors.blue),
+                  overflow: TextOverflow.ellipsis, //超出用...代替
+                  softWrap: false,
+                ),
+              ],
+            ),
+
             ElevatedButton(
                 onPressed: () async {
                   this.scanDevice();
                 },
-                child: Text("扫描设备")),
+                child: Text("Scan The Devices")),
 
             SizedBox(
               height: 20,
@@ -306,14 +441,17 @@ class _BluePageState extends State<BluePage> {
               softWrap: false,
             ),
 
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/product');
-              },
-              // If not yet listening for speech start, otherwise stop
+            Tooltip(
+              message: "Press this button to jump to Contact Page",
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/product');
+                },
+                // If not yet listening for speech start, otherwise stop
 
-              child: Text("Jump to Next Page"),
-            ),
+                child: Text("Jump to Next Page"),
+              ),
+            )
           ],
         ),
       ),

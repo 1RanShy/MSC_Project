@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
               children: this.blueList.map((device) {
                 if (device.name == "Equipment") {
                   return Tooltip(
-                      message: "Tap to connect your device",
+                      message: "Double Tap to connect your device",
                       child: ListTile(
                         title: Text(
                             "Double click to  connect Your ${device.name}"),
