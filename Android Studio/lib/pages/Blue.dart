@@ -23,10 +23,14 @@ class _BluePageState extends State<BluePage> {
   int cc = 0;
   late Timer _timer;
   void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {
+    _timer = Timer.periodic(Duration(seconds: 8), (Timer timer) {
       // 在这里执行你的函数
       try {
         scanDevice();
+        textToSpeech(
+            "Front ${rssiFrontDifference.toString()} Left ${rssiLeftDifference.toString()} Right ${rssiRightDifference.toString()} ");
+        // textToSpeech("Right ${rssiRightDifference.toString()}");
+        // textToSpeech("Right ${rssiRightDifference.toString()}");
         throw Exception('蓝牙扫描注册失败');
       } catch (e) {
         // 捕获异常，并执行相应的函数
@@ -132,8 +136,12 @@ class _BluePageState extends State<BluePage> {
   List<ScanResult> test = [];
   int rssi = 0;
   int rssiLeft = 0;
+  int rssiLeftDifference = 0;
   int rssiRight = 0;
+  int rssiRightDifference = 0;
   int rssiFront = 0;
+  int rssiFrontDifference = 0;
+
   int time = 1;
 
   //获取设备
@@ -156,7 +164,7 @@ class _BluePageState extends State<BluePage> {
   void textToSpeech(String text) async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setVolume(1.0);
-    await flutterTts.setSpeechRate(0.3);
+    await flutterTts.setSpeechRate(0.1);
     await flutterTts.setPitch(1);
     await flutterTts.speak(text);
   }
@@ -232,45 +240,48 @@ class _BluePageState extends State<BluePage> {
         if (r.device.name == "Left") {
           print("--------------------------------------------");
           setState(() {
+            print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
             rssiLeft = r.rssi;
-            if (time > 0) {
-              print(
-                  "You are now near the entrance, please follow the instructions to enter.");
-              textToSpeech(
-                  "You are now near the entrance, please follow the instructions to enter.");
-              time--;
-            }
+            rssiLeftDifference = 80 + rssiLeft;
+            print("rssiLeftDifference");
           });
+          if (time > 0) {
+            print("You are now near the entrance");
+            textToSpeech("You are now near the entrance");
+            time--;
+          }
         }
 
         //获取蓝牙设备的名字和rssi  之后改为BluetoothDevice这个变量更加合适,可以存储更详细的信息
         if (r.device.name == "Right") {
           print("--------------------------------------------");
           setState(() {
+            print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
             rssiRight = r.rssi;
-            if (time > 0) {
-              print(
-                  "You are now near the entrance, please follow the instructions to enter.");
-              textToSpeech(
-                  "You are now near the entrance, please follow the instructions to enter.");
-              time--;
-            }
+            rssiRightDifference = 80 + rssiRight;
+            print("rssiRIghtDifference");
           });
+          if (time > 0) {
+            print("You are now near the entrance");
+            textToSpeech("You are now near the entrance");
+            time--;
+          }
         }
 
         //获取蓝牙设备的名字和rssi  之后改为BluetoothDevice这个变量更加合适,可以存储更详细的信息
         if (r.device.name == "Front") {
           print("--------------------------------------------");
           setState(() {
+            print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
             rssiFront = r.rssi;
-            if (time > 0) {
-              print(
-                  "You are now near the entrance, please follow the instructions to enter.");
-              textToSpeech(
-                  "You are now near the entrance, please follow the instructions to enter.");
-              time--;
-            }
+            rssiFrontDifference = 80 + rssiFront;
+            print("rssiFrontDifference");
           });
+          if (time > 0) {
+            print("You are now near the entrance");
+            textToSpeech("You are now near the entrance");
+            time--;
+          }
         }
 
         if (r.device.name.length > 2) {
@@ -346,7 +357,29 @@ class _BluePageState extends State<BluePage> {
         color: Colors.grey, // 设置深绿色背景
         child: Column(
           children: [
-            Text(time.toString()),
+            Text("越大越近越小越远"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("Left: ${rssiLeft.toString()}"),
+                Text("Dif: ${rssiLeftDifference.toString()}"),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("Right: ${rssiRight.toString()}"),
+                Text("Dif: ${rssiRightDifference.toString()}"),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("Front: ${rssiFront.toString()}"),
+                Text("Dif: ${rssiFrontDifference.toString()}"),
+              ],
+            ),
+
             //------------------------
             TextField(
               maxLines: 3,
