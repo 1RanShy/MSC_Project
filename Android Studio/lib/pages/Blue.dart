@@ -21,6 +21,8 @@ class _BluePageState extends State<BluePage> {
   //_____________Timer_________________
   //__________Timer_______________
   int cc = 0;
+  String distance = "";
+  String x = "";
   late Timer _timer;
   void startTimer() {
     _timer = Timer.periodic(Duration(seconds: 8), (Timer timer) {
@@ -164,7 +166,7 @@ class _BluePageState extends State<BluePage> {
   void textToSpeech(String text) async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setVolume(1.0);
-    await flutterTts.setSpeechRate(0.1);
+    await flutterTts.setSpeechRate(0.3);
     await flutterTts.setPitch(1);
     await flutterTts.speak(text);
   }
@@ -176,7 +178,7 @@ class _BluePageState extends State<BluePage> {
     time = 1;
     _initSpeech();
     _initSpeech2();
-    startTimer();
+    // startTimer();
     _getData();
     //获取设备
     this.device = widget.arguments["device"];
@@ -466,7 +468,7 @@ class _BluePageState extends State<BluePage> {
               height: 20,
             ),
 
-            Text("以下是文本显示/蓝牙数据显示"),
+            // Text("以下是文本显示/蓝牙数据显示"),
             Text(
               show,
               style: TextStyle(color: Colors.blue),
@@ -484,13 +486,98 @@ class _BluePageState extends State<BluePage> {
 
                 child: Text("Jump to Next Page"),
               ),
-            )
+            ),
+            // Container(
+            //   color: Colors.grey, // 设置深绿色背景
+            //   padding: EdgeInsets.all(16),
+            //   child: Text(
+            //     'Recognized words:',
+            //     style: TextStyle(fontSize: 20.0),
+            //   ),
+            // ),
+            // Container(
+            //   color: Colors.grey, // 设置深绿色背景
+            //   padding: EdgeInsets.all(16),
+            //   child: Text(
+            //       // If listening is active show the recognized words
+            //       '$_lastWords'
+            //       // If listening isn't active but could be tell the user
+            //       // how to start it, otherwise indicate that speech
+            //       // recognition is not yet ready or not supported on
+            //       // the target device
+            //       ),
+            // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    print("-------------------");
+                    print(_lastWords);
+
+                    // String x = match?.group(0) ?? '';
+                    // voice recognize
+                    String x = extractNumbers(_lastWords);
+                    if (_lastWords.contains("Set") ||
+                        _lastWords.contains("set")) {
+                      distance = x;
+
+                      final command = distance;
+                      final convertedCommand = AsciiEncoder().convert(command);
+
+                      // await this.mCharacteristics.write([97, 98]);
+                      await this.mCharacteristicWrite.write(convertedCommand);
+                    }
+
+                    if (_lastWords.contains("Far") ||
+                        _lastWords.contains("far")) {
+                      textToSpeech("${show} centimeters");
+                    }
+
+                    // print("_______________________________________");
+                    // print(x);
+                  },
+                  // If not yet listening for speech start, otherwise stop
+
+                  child: Text("Make Sure"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_speechToText.isNotListening) {
+                      _startListening();
+                    } else {
+                      _stopListening();
+                    }
+                    print(
+                        "----------------------------------------------------------");
+                    // if (X.contains("call")) {
+                    //   print("1234-------------");
+                    // }
+                  },
+                  // If not yet listening for speech start, otherwise stop
+
+                  child: Icon(
+                      _speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+                ),
+              ],
+            ),
           ],
         ),
       ),
       //_________________________________
     );
   }
+}
+
+String extractNumbers(String input) {
+  // 使用正则表达式提取数字
+  RegExp regExp = RegExp(r'\d+');
+  Iterable<Match> matches = regExp.allMatches(input);
+
+  // 将提取的数字组合成一个字符串
+  String result = matches.map((match) => match.group(0)).join('');
+
+  return result;
 }
 
 // 拨打电话

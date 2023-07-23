@@ -252,10 +252,11 @@ class _ProductPageState extends State<ProductPage> {
             ElevatedButton(
               onPressed: () {
                 print(_lastWords);
-
+                // voice recognize
                 // String x = match?.group(0) ?? '';
                 String x = extractNumbers(_lastWords);
-                if (_lastWords.contains("call")) {
+                if (_lastWords.contains("call") ||
+                    _lastWords.contains("Call")) {
                   _phonenumber = x;
                   _launchPhoneCall(x);
                 }
