@@ -7,6 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:vibration/vibration.dart';
+import 'package:flutter/services.dart';
 
 // import 'package:flutter/services.dart'
 class BluePage extends StatefulWidget {
@@ -339,6 +341,7 @@ class _BluePageState extends State<BluePage> {
       print(String.fromCharCodes(value)); //表示Ascii转换成字符串
       setState(() {
         show = String.fromCharCodes(value);
+        if (show.contains("Unsafe")) Vibration.vibrate(duration: 200);
       });
 
       //print(AsciiDecoder().convert(value));  //表示Ascii转换成字符串
@@ -347,6 +350,8 @@ class _BluePageState extends State<BluePage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Tooltip(
@@ -355,132 +360,137 @@ class _BluePageState extends State<BluePage> {
         ),
         backgroundColor: Colors.brown,
       ),
+      backgroundColor: Colors.grey,
       body: Container(
+        width: screenWidth,
+        height: screenHeight / 2,
         color: Colors.grey, // 设置深绿色背景
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("越大越近越小越远"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text("Left: ${rssiLeft.toString()}"),
-                Text("Dif: ${rssiLeftDifference.toString()}"),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text("Right: ${rssiRight.toString()}"),
-                Text("Dif: ${rssiRightDifference.toString()}"),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text("Front: ${rssiFront.toString()}"),
-                Text("Dif: ${rssiFrontDifference.toString()}"),
-              ],
-            ),
+            // Text("越大越近越小越远"),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //   children: [
+            //     Text("Left: ${rssiLeft.toString()}"),
+            //     Text("Dif: ${rssiLeftDifference.toString()}"),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //   children: [
+            //     Text("Right: ${rssiRight.toString()}"),
+            //     Text("Dif: ${rssiRightDifference.toString()}"),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //   children: [
+            //     Text("Front: ${rssiFront.toString()}"),
+            //     Text("Dif: ${rssiFrontDifference.toString()}"),
+            //   ],
+            // ),
 
-            //------------------------
-            TextField(
-              maxLines: 3,
-              obscureText: false,
-              decoration: InputDecoration(hintText: "_code0"),
-              onChanged: (value) {
-                setState(() {
-                  this._code0 = value;
-                });
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width - 20,
-              height: 80,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    final command = this._code0;
-                    final convertedCommand = AsciiEncoder().convert(command);
+            // //------------------------
+            // TextField(
+            //   maxLines: 3,
+            //   obscureText: false,
+            //   decoration: InputDecoration(hintText: "_code0"),
+            //   onChanged: (value) {
+            //     setState(() {
+            //       this._code0 = value;
+            //     });
+            //   },
+            // ),
+            // SizedBox(
+            //   height: 20,
+            // ),
+            // Container(
+            //   width: MediaQuery.of(context).size.width - 20,
+            //   height: 80,
+            //   child: ElevatedButton(
+            //       onPressed: () async {
+            //         final command = this._code0;
+            //         final convertedCommand = AsciiEncoder().convert(command);
 
-                    // await this.mCharacteristics.write([97, 98]);
-                    await this.mCharacteristicWrite.write(convertedCommand);
-                  },
-                  child: Text("发送消息")),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("RanShuai : "),
-                Text(
-                  rssi.toString(),
-                  style: TextStyle(color: Colors.blue),
-                  overflow: TextOverflow.ellipsis, //超出用...代替
-                  softWrap: false,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Left : "),
-                Text(
-                  rssiLeft.toString(),
-                  style: TextStyle(color: Colors.blue),
-                  overflow: TextOverflow.ellipsis, //超出用...代替
-                  softWrap: false,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Right : "),
-                Text(
-                  rssiRight.toString(),
-                  style: TextStyle(color: Colors.blue),
-                  overflow: TextOverflow.ellipsis, //超出用...代替
-                  softWrap: false,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Front : "),
-                Text(
-                  rssiFront.toString(),
-                  style: TextStyle(color: Colors.blue),
-                  overflow: TextOverflow.ellipsis, //超出用...代替
-                  softWrap: false,
-                ),
-              ],
-            ),
+            //         // await this.mCharacteristics.write([97, 98]);
+            //         await this.mCharacteristicWrite.write(convertedCommand);
+            //       },
+            //       child: Text("发送消息")),
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Text("RanShuai : "),
+            //     Text(
+            //       rssi.toString(),
+            //       style: TextStyle(color: Colors.blue),
+            //       overflow: TextOverflow.ellipsis, //超出用...代替
+            //       softWrap: false,
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Text("Left : "),
+            //     Text(
+            //       rssiLeft.toString(),
+            //       style: TextStyle(color: Colors.blue),
+            //       overflow: TextOverflow.ellipsis, //超出用...代替
+            //       softWrap: false,
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Text("Right : "),
+            //     Text(
+            //       rssiRight.toString(),
+            //       style: TextStyle(color: Colors.blue),
+            //       overflow: TextOverflow.ellipsis, //超出用...代替
+            //       softWrap: false,
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Text("Front : "),
+            //     Text(
+            //       rssiFront.toString(),
+            //       style: TextStyle(color: Colors.blue),
+            //       overflow: TextOverflow.ellipsis, //超出用...代替
+            //       softWrap: false,
+            //     ),
+            //   ],
+            // ),
 
-            ElevatedButton(
-                onPressed: () async {
-                  this.scanDevice();
-                },
-                child: Text("Scan The Devices")),
+            // ElevatedButton(
+            //     onPressed: () async {
+            //       this.scanDevice();
+            //     },
+            //     child: Text("Scan The Devices")),
 
-            SizedBox(
-              height: 20,
-            ),
+            // SizedBox(
+            //   height: 20,
+            // ),
 
-            // Text("以下是文本显示/蓝牙数据显示"),
-            Text(
-              show,
-              style: TextStyle(color: Colors.blue),
-              overflow: TextOverflow.ellipsis, //超出用...代替
-              softWrap: false,
-            ),
+            // // Text("以下是文本显示/蓝牙数据显示"),
+            // Text(
+            //   show,
+            //   style: TextStyle(color: Colors.blue),
+            //   overflow: TextOverflow.ellipsis, //超出用...代替
+            //   softWrap: false,
+            // ),
 
             Tooltip(
               message: "Press this button to jump to Contact Page",
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/product');
+                  Vibration.vibrate(duration: 500);
+                  Navigator.pushNamed(context, '/product');
                 },
                 // If not yet listening for speech start, otherwise stop
 
@@ -512,6 +522,7 @@ class _BluePageState extends State<BluePage> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
+                    Vibration.vibrate(duration: 500);
                     print("-------------------");
                     print(_lastWords);
 
@@ -543,6 +554,7 @@ class _BluePageState extends State<BluePage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    Vibration.vibrate(duration: 500);
                     if (_speechToText.isNotListening) {
                       _startListening();
                     } else {
@@ -560,6 +572,55 @@ class _BluePageState extends State<BluePage> {
                       _speechToText.isNotListening ? Icons.mic_off : Icons.mic),
                 ),
               ],
+            ),
+            ExcludeSemantics(
+              excluding: true,
+              child: Tooltip(
+                message: "Perform gestures in this area.",
+                child: GestureDetector(
+                  onTap: () {
+                    // 处理轻按（单击）的逻辑
+                    print("轻按了屏幕");
+                  },
+                  onLongPress: () {
+                    // 处理长按的逻辑
+                    print("长按了屏幕");
+                  },
+                  onPanUpdate: (details) {
+                    // 处理拖动的逻辑
+                    // Vibration.vibrate(duration: 500);
+                    print("拖动了屏幕，位置：${details.globalPosition}");
+                  },
+                  onVerticalDragUpdate: (details) {
+                    // 获取垂直方向上滑动的距离
+                    double dy = details.delta.dy;
+
+                    if (dy > 0) {
+                      // 用户向下滑动
+                      print("用户向下滑动，滑动距离：$dy");
+                      Vibration.vibrate(duration: 500);
+                      textToSpeech("${show} centimeters");
+                    } else if (dy < 0) {
+                      // 用户向上滑动
+                      Vibration.vibrate(duration: 500);
+                      Navigator.pushNamed(context, '/product');
+                      print("用户向上滑动，滑动距离：$dy");
+                    }
+                  },
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    color: Colors.blue,
+                    child: Center(
+                      child: Text(
+                        'Gestures area.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
