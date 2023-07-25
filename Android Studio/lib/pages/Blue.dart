@@ -9,6 +9,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 
 // import 'package:flutter/services.dart'
 class BluePage extends StatefulWidget {
@@ -180,7 +181,7 @@ class _BluePageState extends State<BluePage> {
     time = 1;
     _initSpeech();
     _initSpeech2();
-    // startTimer();
+    startTimer();
     _getData();
     //获取设备
     this.device = widget.arguments["device"];
