@@ -14,14 +14,16 @@ void loop()
   // put your main code here, to run repeatedly:
   //  vibratorTest();
   //humanSensorTest();
-  sr04Test();
-//  testInfrared();
+  //  sr04Test();
+
+    testInfrared();
 
 }
 void sr04Test()
 {
   SR04 d1(10, 9);
   d1.getDistance();
+  delay(500);
 }
 
 
